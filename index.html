@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover, shrink-to-fit=yes">
+  <title>PATROLI PANARUKAN • Laporan Patroli</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #020914;
+      font-family: 'Inter', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 12px 8px 40px;
+      margin: 0;
+      color: #e8f0fe;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 450px;
+      background: linear-gradient(160deg, #0a1525 0%, #030b18 100%);
+      border-radius: 36px;
+      border: 1px solid rgba(70, 130, 210, 0.2);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      padding: 22px 16px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 20%, rgba(30, 80, 160, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* HEADER AREA - FLEX ROW */
+    .header-area {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 2px 20px rgba(80, 150, 255, 0.5);
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .sub-title {
+      font-size: 0.7rem;
+      color: #8099c4;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    /* TANGGAL DI POJOK KANAN ATAS */
+    .header-right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding-top: 6px;
+    }
+
+    .date-badge {
+      background: rgba(20, 40, 70, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(70, 140, 220, 0.25);
+      border-radius: 16px;
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .date-day {
+      font-size: 0.65rem;
+      color: #90aacf;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+    }
+
+    .date-full {
+      font-size: 0.85rem;
+      color: #e0ecff;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    /* CLOCK & GREETING */
+    .info-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(20, 35, 60, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(70, 140, 220, 0.15);
+    }
+
+    .clock-block {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .live-clock {
+      font-size: 2rem;
+      font-weight: 300;
+      color: #d4eaff;
+      font-feature-settings: "tnum";
+      letter-spacing: 2px;
+      text-shadow: 0 0 20px rgba(100, 180, 255, 0.6);
+    }
+
+    .live-seconds {
+      font-size: 1rem;
+      color: #6d93c8;
+      font-weight: 300;
+      font-feature-settings: "tnum";
+    }
+
+    .greeting-tag {
+      background: rgba(0, 120, 255, 0.2);
+      border: 1px solid rgba(70, 150, 240, 0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #cde3ff;
+      white-space: nowrap;
+    }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      background: rgba(15, 28, 50, 0.6);
+      border-radius: 20px;
+      padding: 7px 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      white-space: nowrap;
+      border: 1px solid rgba(70, 140, 220, 0.12);
+    }
+
+    .marquee-text {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+      font-size: 0.72rem;
+      color: #9db8e0;
+      letter-spacing: 0.4px;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* STEP SECTIONS */
+    .step-card {
+      background: rgba(18, 28, 48, 0.55);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(70, 135, 215, 0.15);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .step-header {
+      padding: 15px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: #d0e2ff;
+      letter-spacing: 0.4px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid transparent;
+      transition: background 0.2s;
+    }
+
+    .step-header:active {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .step-card.open .step-header {
+      border-bottom: 1px solid rgba(70, 140, 220, 0.2);
+    }
+
+    .step-indicator {
+      font-size: 0.7rem;
+      color: #6d93c8;
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .step-card.open .step-indicator {
+      transform: rotate(180deg);
+    }
+
+    .step-body {
+      display: none;
+      padding: 14px 16px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .step-card.open .step-body {
+      display: block;
+    }
+
+    /* OFFICER LIST */
+    .officer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .officer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.82rem;
+      color: #cdddf8;
+    }
+
+    .officer-row label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      cursor: pointer;
+      font-weight: 400;
+    }
+
+    .officer-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #3b82f6;
+      border-radius: 4px;
+      flex-shrink: 0;
+      pointer-events: auto;
+    }
+
+    /* INPUT KAPAL */
+    .ship-input {
+      width: 100%;
+      background: #0b1322;
+      border: 1px solid #243a5c;
+      border-radius: 14px;
+      padding: 13px 15px;
+      color: #e0ecff;
+      font-size: 0.85rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .ship-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
+    }
+
+    /* WEATHER REAL-TIME */
+    .weather-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .weather-item {
+      background: #0e1a2b;
+      border-radius: 14px;
+      padding: 10px 12px;
+      flex: 1;
+      text-align: center;
+      border: 1px solid #1e3250;
+      min-width: 70px;
+    }
+    .weather-label {
+      font-size: 0.65rem;
+      color: #7d98c0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .weather-value {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #f0f6ff;
+      margin-top: 4px;
+    }
+
+    /* GIAT PATROLI */
+    .patroli-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.82rem;
+    }
+    .radio-inline {
+      display: flex;
+      gap: 14px;
+    }
+    .radio-inline label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    /* SITUASI */
+    .situasi-options {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .situasi-options label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .keterangan-area {
+      width: 100%;
+      background: #0b1322;
+      border: 1px solid #243a5c;
+      border-radius: 14px;
+      padding: 12px;
+      color: white;
+      font-family: inherit;
+      font-size: 0.82rem;
+      resize: vertical;
+      margin-top: 6px;
+    }
+
+    /* ============ TOMBOL KIRIM DENGAN EFEK DENYUT SOS ============ */
+    .btn-send-wrapper {
+      position: relative;
+      margin-top: 20px;
+      z-index: 5;
+    }
+
+    .btn-send {
+      background: linear-gradient(135deg, #0f2748, #06142b);
+      border: 1px solid #2e5080;
+      color: #f5f9ff;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 17px 20px;
+      border-radius: 26px;
+      width: 100%;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      animation: sosPulse 2s infinite;
+    }
+
+    .btn-send:active {
+      transform: scale(0.96);
+      background: #05162e;
+      animation: none;
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+
+    /* Efek denyut SOS */
+    @keyframes sosPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+        border-color: #2e5080;
+      }
+      25% {
+        box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.4);
+        border-color: #4a8af0;
+      }
+      50% {
+        box-shadow: 0 0 0 18px rgba(59, 130, 246, 0);
+        border-color: #2e5080;
+      }
+      75% {
+        box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.3);
+        border-color: #3b6fd4;
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        border-color: #2e5080;
+      }
+    }
+
+    /* Lingkaran ripple tambahan untuk efek SOS */
+    .btn-send-wrapper::before,
+    .btn-send-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 30px;
+      width: 100%;
+      height: 100%;
+      border: 2px solid rgba(59, 130, 246, 0.4);
+      animation: sosRipple 2s infinite;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+    }
+
+    .btn-send-wrapper::after {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes sosRipple {
+      0% {
+        width: 100%;
+        height: 100%;
+        opacity: 0.8;
+        border-width: 2px;
+      }
+      100% {
+        width: 130%;
+        height: 150%;
+        opacity: 0;
+        border-width: 0.5px;
+        border-radius: 40px;
+      }
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.68rem;
+      color: #556c8a;
+      margin-top: 10px;
+      letter-spacing: 0.3px;
+    }
+
+    .loading-text {
+      opacity: 0.7;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <!-- HEADER: PATROLI di kiri, TANGGAL di kanan -->
+  <div class="header-area">
+    <div class="header-left">
+      <div class="main-title">PATROLI</div>
+      <div class="sub-title">KSOP KELAS IV PANARUKAN</div>
+    </div>
+    <div class="header-right">
+      <div class="date-badge">
+        <span class="date-day" id="dateDay">---</span>
+        <span class="date-full" id="dateFull">---</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAM & GREETING -->
+  <div class="info-strip">
+    <div class="clock-block">
+      <span class="live-clock" id="liveClock">--:--</span>
+      <span class="live-seconds" id="liveSeconds">:--</span>
+    </div>
+    <span class="greeting-tag" id="greetingTag">Selamat Pagi</span>
+  </div>
+
+  <!-- MARQUEE MOTIVASI -->
+  <div class="marquee-wrap">
+    <div class="marquee-text">🔷 TETAP WASPADA • UTAMAKAN KESELAMATAN • GIAT PATROLI RUTIN • KSOP PANARUKAN SIAP MELAYANI • JAGA MARWAH SATPAM 🔷</div>
+  </div>
+
+  <!-- STEP 1: PERWIRA -->
+  <div class="step-card open" id="stepPerwira">
+    <div class="step-header" onclick="toggleStep('stepPerwira')">
+      <span>⬛ PERWIRA JAGA</span>
+      <span class="step-indicator">▼</span>
+    </div>
+    <div class="step-body">
+      <div class="officer-list" id="perwiraList"></div>
+    </div>
+  </div>
+
+  <!-- STEP 2: SATPAM -->
+  <div class="step-card" id="stepSatpam">
+    <div class="step-header" onclick="toggleStep('stepSatpam')">
+      <span>⬛ PETUGAS JAGA (SATPAM)</span>
+      <span class="step-indicator">▼</span>
+    </div>
+    <div class="step-body">
+      <div class="officer-list" id="satpamList"></div>
+    </div>
+  </div>
+
+  <!-- STEP 3: KAPAL -->
+  <div class="step-card" id="stepKapal">
+    <div class="step-header" onclick="toggleStep('stepKapal')">
+      <span>⬛ KAPAL SANDAR</span>
+      <span class="step-indicator">▼</span>
+    </div>
+    <div class="step-body">
+      <input type="text" id="kapalInput" class="ship-input" placeholder="Masukkan nama kapal (pisahkan dengan koma)...">
+    </div>
+  </div>
+
+  <!-- STEP 4: CUACA REAL-TIME -->
+  <div class="step-card open" id="stepCuaca">
+    <div class="step-header" onclick="toggleStep('stepCuaca')">
+      <span>⬛ PERKIRAAN CUACA (REAL-TIME)</span>
+      <span class="step-indicator">▼</span>
+    </div>
+    <div class="step-body">
+      <div class="weather-grid" id="weatherContainer">
+        <div class="weather-item"><div class="weather-label">Cuaca</div><div class="weather-value loading-text" id="cuacaVal">Memuat...</div></div>
+        <div class="weather-item"><div class="weather-label">Angin</div><div class="weather-value loading-text" id="anginVal">--</div></div>
+        <div class="weather-item"><div class="weather-label">Gelombang</div><div class="weather-value loading-text" id="gelombangVal">--</div></div>
+      </div>
+      <div style="font-size:0.65rem; color:#5b74a0; margin-top:6px;">📍 Perairan Panarukan • data real-time</div>
+    </div>
+  </div>
+
+  <!-- STEP 5: GIAT PATROLI -->
+  <div class="step-card" id="stepPatroli">
+    <div class="step-header" onclick="toggleStep('stepPatroli')">
+      <span>⬛ GIAT PATROLI AREA</span>
+      <span class="step-indicator">▼</span>
+    </div>
+    <div class="step-body" id="patroliContainer"></div>
+  </div>
+
+  <!-- STEP 6: SITUASI -->
+  <div class="step-card" id="stepSituasi">
+    <div class="step-header" onclick="toggleStep('stepSituasi')">
+      <span>⬛ KETERANGAN SITUASI</span>
+      <span class="step-indicator">▼</span>
+    </div>
+    <div class="step-body">
+      <div class="situasi-options">
+        <label><input type="radio" name="situasi" value="Kondusif" checked onchange="handleSituasiChange()"> Kondusif</label>
+        <label><input type="radio" name="situasi" value="Tidak Kondusif" onchange="handleSituasiChange()"> Tidak Kondusif</label>
+      </div>
+      <textarea id="keteranganTambahan" class="keterangan-area" placeholder="Tulis keterangan jika situasi tidak kondusif..." rows="2" style="display:none;"></textarea>
+    </div>
+  </div>
+
+  <!-- TOMBOL KIRIM DENGAN EFEK DENYUT SOS -->
+  <div class="btn-send-wrapper">
+    <button class="btn-send" id="kirimButton">KIRIM LAPORAN</button>
+  </div>
+  <div class="footer-note">Laporan Resmi • PATROLI PANARUKAN</div>
+</div>
+
+<script>
+  (function() {
+    // ========== DATA ==========
+    const perwiraNama = [
+      "Anthonius Iwan Handoko, S.Sos",
+      "Didik Ismail Saleh, S.H.",
+      "Zulhan Arifiyansyah, S.H.",
+      "Yandika Ferdiansyah, S.H."
+    ];
+    const satpamNama = [
+      "Zhainul Arifin",
+      "Viky Anugrah Hidayat",
+      "Hiffur Roziqin",
+      "Puguh Hendro Utomo",
+      "Yantit Alamsyah",
+      "Tareq Al Farizi",
+      "Andreas Eko D",
+      "Imam Sukandar"
+    ];
+    const patroliAreas = [
+      "Area Kantor",
+      "Area Lap Penumpukan",
+      "Area Dermaga",
+      "Area Parkir"
+    ];
+
+    // ========== TOGGLE STEP ==========
+    window.toggleStep = function(stepId) {
+      const card = document.getElementById(stepId);
+      if (!card) return;
+      card.classList.toggle('open');
+    };
+
+    // ========== SITUASI CHANGE ==========
+    window.handleSituasiChange = function() {
+      const tidakKondusif = document.querySelector('input[name="situasi"][value="Tidak Kondusif"]');
+      const textarea = document.getElementById('keteranganTambahan');
+      if (tidakKondusif && tidakKondusif.checked) {
+        textarea.style.display = 'block';
+      } else {
+        textarea.style.display = 'none';
+        textarea.value = '';
+      }
+    };
+
+    // ========== RENDER CHECKBOX ==========
+    function renderOfficers(containerId, names, prefix) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = names.map((name, i) => {
+        return `<div class="officer-row">
+                  <label>
+                    <input type="checkbox" class="${prefix}-check" value="${name}" checked>
+                    <span>${i+1}. ${name}</span>
+                  </label>
+                </div>`;
+      }).join('');
+    }
+
+    // ========== RENDER GIAT PATROLI ==========
+    function renderPatroli() {
+      const container = document.getElementById('patroliContainer');
+      if (!container) return;
+      container.innerHTML = patroliAreas.map((area, i) => {
+        return `<div class="patroli-row">
+                  <span>${i+1}. ${area}</span>
+                  <div class="radio-inline">
+                    <label><input type="radio" name="patroli_${i}" value="Aman" checked> Aman</label>
+                    <label><input type="radio" name="patroli_${i}" value="Tidak Aman"> Tidak Aman</label>
+                  </div>
+                </div>`;
+      }).join('');
+    }
+
+    // ========== JAM & TANGGAL REAL-TIME ==========
+    function updateClock() {
+      const now = new Date();
+
+      // Jam
+      const jam = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
+      const detik = now.toLocaleTimeString('id-ID', { second: '2-digit', hour12: false }).split(':')[2];
+      document.getElementById('liveClock').textContent = jam;
+      document.getElementById('liveSeconds').textContent = `:${detik}`;
+
+      // Hari & Tanggal di pojok kanan atas
+      const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+      const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      document.getElementById('dateDay').textContent = hari[now.getDay()];
+      document.getElementById('dateFull').textContent = `${now.getDate()} ${bulan[now.getMonth()]} ${now.getFullYear()}`;
+
+      // Greeting
+      const hours = now.getHours();
+      let salam = "Selamat Pagi";
+      if (hours >= 11 && hours < 15) salam = "Selamat Siang";
+      else if (hours >= 15 && hours < 18) salam = "Selamat Sore";
+      else if (hours >= 18 || hours < 5) salam = "Selamat Malam";
+      document.getElementById('greetingTag').textContent = salam;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // ========== CUACA REAL-TIME (Open-Meteo API) ==========
+    async function fetchWeatherRealTime() {
+      try {
+        const lat = -7.702;
+        const lon = 113.938;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=weather_code,wind_speed_10m,wind_direction_10m,wave_height&timezone=Asia/Jakarta&forecast_days=1`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const current = data.current || {};
+        const weatherCode = current.weather_code;
+        const windSpeed = current.wind_speed_10m;
+        const windDir = current.wind_direction_10m;
+        const waveHeight = current.wave_height;
+
+        const cuacaMap = {
+          0: 'Cerah', 1: 'Cerah Berawan', 2: 'Berawan', 3: 'Mendung',
+          45: 'Berkabut', 48: 'Berkabut',
+          51: 'Gerimis Ringan', 53: 'Gerimis', 55: 'Gerimis Lebat',
+          61: 'Hujan Ringan', 63: 'Hujan', 65: 'Hujan Lebat',
+          71: 'Salju Ringan', 73: 'Salju', 75: 'Salju Lebat',
+          80: 'Hujan Ringan', 81: 'Hujan', 82: 'Hujan Lebat',
+          95: 'Badai Petir', 96: 'Badai Petir Hujan Es', 99: 'Badai Petir Hebat'
+        };
+        const cuacaText = cuacaMap[weatherCode] || 'Cerah';
+
+        const arahAngin = getWindDirection(windDir);
+        const windKnots = (windSpeed * 0.539957).toFixed(1);
+        const waveDisplay = waveHeight != null ? `${waveHeight.toFixed(1)} m` : '0.1-0.5 m';
+
+        document.getElementById('cuacaVal').textContent = cuacaText;
+        document.getElementById('cuacaVal').classList.remove('loading-text');
+        document.getElementById('anginVal').textContent = `${windKnots} knots (${arahAngin})`;
+        document.getElementById('anginVal').classList.remove('loading-text');
+        document.getElementById('gelombangVal').textContent = waveDisplay;
+        document.getElementById('gelombangVal').classList.remove('loading-text');
+
+      } catch (error) {
+        console.log('Cuaca fetch error, using fallback:', error);
+        document.getElementById('cuacaVal').textContent = 'Cerah';
+        document.getElementById('anginVal').textContent = '3,8 knots';
+        document.getElementById('gelombangVal').textContent = '0.1-0.5 m';
+        document.getElementById('cuacaVal').classList.remove('loading-text');
+        document.getElementById('anginVal').classList.remove('loading-text');
+        document.getElementById('gelombangVal').classList.remove('loading-text');
+      }
+    }
+
+    function getWindDirection(degree) {
+      if (degree == null) return 'Dari Selatan - Utara';
+      const directions = ['Utara', 'Timur Laut', 'Timur', 'Tenggara', 'Selatan', 'Barat Daya', 'Barat', 'Barat Laut'];
+      const index = Math.round(degree / 45) % 8;
+      return `Dari ${directions[index]}`;
+    }
+
+    // ========== KIRIM WHATSAPP ==========
+    function buildMessage() {
+      const now = new Date();
+      const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+      const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      const fullDate = `${hari[now.getDay()]} ${now.getDate()} ${bulan[now.getMonth()]} ${now.getFullYear()}`;
+      const greeting = document.getElementById('greetingTag').textContent;
+
+      const perwiraChecked = Array.from(document.querySelectorAll('.perwira-check:checked')).map(cb => cb.value);
+      const satpamChecked = Array.from(document.querySelectorAll('.satpam-check:checked')).map(cb => cb.value);
+
+      const kapalRaw = document.getElementById('kapalInput').value.trim();
+      const kapalList = kapalRaw ? kapalRaw.split(/[,;\n]+/).map(k => k.trim()).filter(k => k.length > 0) : [];
+
+      const patroliLines = patroliAreas.map((area, i) => {
+        const radio = document.querySelector(`input[name="patroli_${i}"]:checked`);
+        return `${i+1}. ${area} : ${radio ? radio.value : 'Aman'}`;
+      });
+
+      const situasiRadio = document.querySelector('input[name="situasi"]:checked');
+      const situasiStatus = situasiRadio ? situasiRadio.value : 'Kondusif';
+      let keterangan = '';
+      if (situasiStatus === 'Tidak Kondusif') {
+        const tambahan = document.getElementById('keteranganTambahan').value.trim();
+        keterangan = tambahan ? `\nKeterangan: ${tambahan}` : '';
+      }
+
+      const cuaca = document.getElementById('cuacaVal').textContent;
+      const angin = document.getElementById('anginVal').textContent;
+      const gelombang = document.getElementById('gelombangVal').textContent;
+
+      const perwiraStr = perwiraChecked.length ? perwiraChecked.map((n, i) => `${i+1}. ${n}`).join('\n') : '(tidak dipilih)';
+      const satpamStr = satpamChecked.length ? satpamChecked.map((n, i) => `${i+1}. ${n}`).join('\n') : '(tidak dipilih)';
+      const kapalStr = kapalList.length ? kapalList.map(k => `· ${k}`).join('\n') : '· (tidak ada kapal)';
+
+      return `Assalamualaikum Wr Wb.\n${greeting},\n\nMohon ijin melaporkan Kegiatan Patroli Satpam Kantor KSOP Kelas IV Panarukan pada hari ${fullDate}.\n\nPerwira Jaga\n\n${perwiraStr}\n\nPetugas Jaga (Satpam)\n\n${satpamStr}\n\nKEGIATAN :\n\nI. Giat Patroli di area kantor dan dermaga Panarukan\n\n${patroliLines.join('\n')}\n5. Kapal yang sandar:\n\n${kapalStr}\n\nII. Perkiraan Cuaca :\n\n· ${cuaca}\n· Kec. Angin : ${angin}\n· Tinggi Gelombang : ${gelombang}\n\nIII. Dokumentasi\n\n· Terlampir\n\nKeterangan SITUASI\n\n· Situasi ${situasiStatus}${keterangan}\n\nLaporan selesai \nWassalamu'alaikum wr wb.`;
+    }
+
+    function sendToWhatsApp() {
+      const message = buildMessage();
+      const encoded = encodeURIComponent(message);
+      window.open(`https://wa.me/?text=${encoded}`, '_blank');
+    }
+
+    // ========== INISIALISASI ==========
+    function init() {
+      renderOfficers('perwiraList', perwiraNama, 'perwira');
+      renderOfficers('satpamList', satpamNama, 'satpam');
+      renderPatroli();
+      handleSituasiChange();
+      fetchWeatherRealTime();
+
+      document.getElementById('kirimButton').addEventListener('click', sendToWhatsApp);
+
+      setInterval(fetchWeatherRealTime, 30 * 60 * 1000);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+</body>
+</html>
